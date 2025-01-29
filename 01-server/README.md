@@ -29,7 +29,7 @@ A simple e-commerce API built with Go, featuring JWT-based authentication, Postg
    docker compose up --build
    ```
 3. **Swagger UI**:
-    - Open `http://localhost:8081/swagger/` to explore the API.
+    - Open [http://localhost:8081/swagger/](http://localhost:8081/swagger/) to explore the API.
 ### Note
 
 - **Persistent Storage**: By default, a named Docker volume is used. Check `docker-compose.yml` for an alternative local directory binding.
