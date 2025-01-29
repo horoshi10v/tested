@@ -15,6 +15,10 @@ A simple e-commerce API built with Go, featuring JWT-based authentication, Postg
 - **Containerized Deployment**
   - Fully Dockerized setup for easy deployment
   - Supports both local and production environments
+- **Testing**
+    - **Unit Tests** for isolated function validation
+    - **Mock-Based Tests** for repository and service layer
+    - **Integration Tests** to validate API behavior
 
 ## Quick Start
 
@@ -28,7 +32,11 @@ A simple e-commerce API built with Go, featuring JWT-based authentication, Postg
    ```bash
    docker compose up --build
    ```
-3. **Swagger UI**:
+4. **Run Tests**:
+   ```bash
+   docker compose exec app go test ./tests/... -v
+   ```
+5. **Swagger UI**:
     - Open [http://localhost:8081/swagger/](http://localhost:8081/swagger/) to explore the API.
 ### Note
 
