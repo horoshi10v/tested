@@ -8,9 +8,10 @@ COPY . .
 RUN go build -o /app/app ./cmd/server
 
 # Final stage
-FROM alpine:latest
+FROM golang:1.23-alpine
 WORKDIR /app
 COPY --from=builder /app/app /app/app
+COPY . .
 RUN chmod +x /app/app
 EXPOSE 8081
 CMD ["/app/app"]
