@@ -2,6 +2,8 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
+	"github.com/lib/pq"
 
 	"01-server/internal/models"
 )
@@ -25,7 +27,15 @@ func (r *userRepo) CreateUser(u models.User) (int, error) {
 		"INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id",
 		u.Username, u.Password,
 	).Scan(&newID)
-	return newID, err
+
+	if err != nil {
+		var pgErr *pq.Error
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" { // 23505 = duplicate key
+			return 0, errors.New("user already exists")
+		}
+		return 0, err
+	}
+	return newID, nil
 }
 
 func (r *userRepo) GetByUsername(username string) (models.User, error) {
