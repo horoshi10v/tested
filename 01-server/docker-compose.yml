@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "01server_app"
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    env_file:
+      - .env
+    depends_on:
+      - database
+    command: ["/app/app"]
+    restart: unless-stopped
+
+  database:
+    image: postgres:15-alpine
+    container_name: "01server_db"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASS}"
+      POSTGRES_DB: "${DB_NAME}"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    # To store DB files instead of Docker:
+    # - ~/docker-data/postgres:/var/lib/postgresql/data
+    # if hide external DB access:
+    # ports:
+    #   - "5432:5432"
+    restart: unless-stopped
+volumes:
+  pgdata:
