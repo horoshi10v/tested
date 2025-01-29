@@ -1,0 +1,231 @@
+definitions:
+  models.Seller:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  models.SellerCreateRequest:
+    properties:
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  models.User:
+    properties:
+      id:
+        type: integer
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.UserCreateRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates user and sets JWT token in cookie
+      parameters:
+      - description: Username/Password
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Login
+      tags:
+      - Auth
+  /logout:
+    post:
+      description: Clears JWT token from cookie
+      responses:
+        "200":
+          description: Logged out successfully
+          schema:
+            type: string
+      summary: Logout
+      tags:
+      - Auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user with hashed password
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid JSON
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Register new user
+      tags:
+      - Auth
+  /sellers:
+    get:
+      description: Returns array of sellers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Seller'
+            type: array
+      summary: Get all sellers
+      tags:
+      - Sellers
+    post:
+      consumes:
+      - application/json
+      description: Creates a new seller
+      parameters:
+      - description: Seller Data
+        in: body
+        name: seller
+        required: true
+        schema:
+          $ref: '#/definitions/models.SellerCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Seller'
+        "400":
+          description: Invalid JSON
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create seller
+      tags:
+      - Sellers
+  /sellers/{id}:
+    delete:
+      description: Removes a seller by ID
+      parameters:
+      - description: Seller ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete seller
+      tags:
+      - Sellers
+    get:
+      description: Returns a single seller by its ID
+      parameters:
+      - description: Seller ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Seller'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Not found
+          schema:
+            type: string
+      summary: Get seller by ID
+      tags:
+      - Sellers
+    put:
+      consumes:
+      - application/json
+      description: Updates existing seller by ID
+      parameters:
+      - description: Seller ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Seller Data
+        in: body
+        name: seller
+        required: true
+        schema:
+          $ref: '#/definitions/models.SellerCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Seller'
+        "400":
+          description: Invalid JSON / ID
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update seller
+      tags:
+      - Sellers
+swagger: "2.0"
